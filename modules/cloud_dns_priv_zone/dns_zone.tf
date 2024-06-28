@@ -6,7 +6,7 @@ resource "google_dns_managed_zone" "dns_private_zone" {
 
   private_visibility_config {
     networks {
-      network_url = var.network_id
+      network_url = var.network_url
     }
   }
 } 

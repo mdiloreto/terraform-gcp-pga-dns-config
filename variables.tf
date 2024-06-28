@@ -266,3 +266,7 @@ variable "pga_dns_config_run_a_records_rrdatas" {
 ### Project data
 
 variable "project_id" {}
+variable "zone" {}
+variable "region" {}
+
+variable "network_name" {}

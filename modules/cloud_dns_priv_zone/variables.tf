@@ -14,6 +14,6 @@ variable "description" {
   default     = ""
 }
 
-variable "network_id" {
+variable "network_url" {
   description = "This is the network id that will have visibility of the zone in the private_visibility_config."
 }

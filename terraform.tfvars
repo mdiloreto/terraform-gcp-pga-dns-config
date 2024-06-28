@@ -76,6 +76,9 @@ pga_dns_config_run_a_records_rrdatas      = ["199.36.153.8", "199.36.153.9", "19
 
 #### Project ID 
 project_id = "silent-wharf-427322-a0"
+region     = "us-east4"
+zone       = "us-east4-c"
 
 #### Network 
-project_net_id = "vpc_network_01"
+project_net_id = "projects/silent-wharf-427322-a0/regions/us-east4/subnetworks/vpcnetwork01"
+network_name = "vpcnetwork01" 

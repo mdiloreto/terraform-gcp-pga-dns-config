@@ -1,7 +1,7 @@
 resource "google_compute_network" "vpc_network" {
-  name = var.project_net_id
+  name = var.network_name
 
-  }
+}
 
 resource "google_compute_subnetwork" "subnet-with-logging" {
   name          = "log-test-subnetwork"
