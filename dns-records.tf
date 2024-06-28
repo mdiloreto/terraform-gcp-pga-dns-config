@@ -14,7 +14,7 @@ module "googleapis_zone" {
 
   providers = var.provider
 
-  network_url  = google_compute_network.vpc_network.id
+  network_url  = var.network_url
   name         = "googleapis-zone"
   dns_name     = "googleapis.com."
   description  = "Private zone for googleapis.com"
@@ -23,11 +23,9 @@ module "googleapis_zone" {
 module "gcr_zone" {
   source = "./modules/cloud_dns_priv_zone"
 
-  providers = {
-    google = google
-  }
+  providers = var.provider
 
-  network_url  = google_compute_network.vpc_network.id
+  network_url  = var.network_url
   name         = "gcr-zone"
   dns_name     = "gcr.io."
   description  = "Private zone for gcr.io"
@@ -36,11 +34,9 @@ module "gcr_zone" {
 module "pkg_zone" {
   source = "./modules/cloud_dns_priv_zone"
 
-  providers = {
-    google = google
-  }
+  providers = var.provider
   
-  network_url  = google_compute_network.vpc_network.id
+  network_url  = var.network_url
   name         = "pkg-zone"
   dns_name     = "pkg.dev."
   description  = "Private zone for pkg.dev"
@@ -49,11 +45,9 @@ module "pkg_zone" {
 module "run_zone" {
   source = "./modules/cloud_dns_priv_zone"
 
-  providers = {
-    google = google
-  }
+  providers = var.provider
   
-  network_url  = google_compute_network.vpc_network.id
+  network_url  = var.network_url
   name         = "run-zone"
   dns_name     = "run.app."
   description  = "Private zone for run.app"
@@ -64,9 +58,7 @@ module "run_zone" {
 module "googleapis_cname_record" {
   source = "./modules/cloud_dns_zone_record"
 
-  providers = {
-    google = google
-  }
+  providers = var.provider
   
   name         = "*.googleapis.com."
   managed_zone = module.googleapis_zone.zone_name
@@ -81,9 +73,7 @@ module "googleapis_cname_record" {
 module "gcr_cname_record" {
   source = "./modules/cloud_dns_zone_record"
 
-  providers = {
-    google = google
-  }
+  providers = var.provider
   
   name         = "*.gcr.io."
   managed_zone = module.gcr_zone.zone_name
@@ -97,9 +87,7 @@ module "gcr_cname_record" {
 module "pkg_cname_record" {
   source = "./modules/cloud_dns_zone_record"
 
-  providers = {
-    google = google
-  }
+  providers = var.provider
   
   name         = "*.pkg.dev."
   managed_zone = module.pkg_zone.zone_name
@@ -114,9 +102,7 @@ module "pkg_cname_record" {
 module "run_cname_record" {
   source = "./modules/cloud_dns_zone_record"
 
-  providers = {
-    google = google
-  }
+  providers = var.provider
   
   name         = "*.run.app."
   managed_zone = module.run_zone.zone_name
@@ -130,9 +116,7 @@ module "run_cname_record" {
 module "googleapis_a_records" {
   source = "./modules/cloud_dns_zone_record"
 
-  providers = {
-    google = google
-  }
+  providers = var.provider
   
   name         = "googleapis.com."
   managed_zone = module.googleapis_zone.zone_name
@@ -146,9 +130,7 @@ module "googleapis_a_records" {
 module "gcr_a_records" {
   source = "./modules/cloud_dns_zone_record"
 
-  providers = {
-    google = google
-  }
+  providers = var.provider
 
   name         = "gcr.io."
   managed_zone = module.gcr_zone.zone_name
@@ -162,9 +144,7 @@ module "gcr_a_records" {
 module "pkg_a_records" {
   source = "./modules/cloud_dns_zone_record"
 
-  providers = {
-    google = google
-  }
+  providers = var.provider
   
   name         = "pkg.dev."
   managed_zone = module.pkg_zone.zone_name
@@ -178,9 +158,7 @@ module "pkg_a_records" {
 module "run_a_records" {
   source = "./modules/cloud_dns_zone_record"
 
-  providers = {
-    google = google
-  }
+  providers = var.provider
   
   name         = "run.app."
   managed_zone = module.run_zone.zone_name
