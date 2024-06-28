@@ -12,14 +12,12 @@ module "dns_api" {
 module "googleapis_zone" {
   source = "./modules/cloud_dns_priv_zone"
 
-  providers = {
-    google = google
-  }
+  providers = var.provider
 
   network_url  = google_compute_network.vpc_network.id
-  name        = var.pga_dns_config_googleapis_zone_name
-  dns_name    = var.pga_dns_config_googleapis_zone_dns_name
-  description = var.pga_dns_config_googleapis_zone_description
+  name         = "googleapis-zone"
+  dns_name     = "googleapis.com."
+  description  = "Private zone for googleapis.com"
 }
 
 module "gcr_zone" {
@@ -30,9 +28,9 @@ module "gcr_zone" {
   }
 
   network_url  = google_compute_network.vpc_network.id
-  name        = var.pga_dns_config_gcr_zone_name
-  dns_name    = var.pga_dns_config_gcr_zone_dns_name
-  description = var.pga_dns_config_gcr_zone_description
+  name         = "gcr-zone"
+  dns_name     = "gcr.io."
+  description  = "Private zone for gcr.io"
 }
 
 module "pkg_zone" {
@@ -43,9 +41,9 @@ module "pkg_zone" {
   }
   
   network_url  = google_compute_network.vpc_network.id
-  name        = var.pga_dns_config_pkg_zone_name
-  dns_name    = var.pga_dns_config_pkg_zone_dns_name
-  description = var.pga_dns_config_pkg_zone_description
+  name         = "pkg-zone"
+  dns_name     = "pkg.dev."
+  description  = "Private zone for pkg.dev"
 }
 
 module "run_zone" {
@@ -56,9 +54,9 @@ module "run_zone" {
   }
   
   network_url  = google_compute_network.vpc_network.id
-  name        = var.pga_dns_config_run_zone_name
-  dns_name    = var.pga_dns_config_run_zone_dns_name
-  description = var.pga_dns_config_run_zone_description
+  name         = "run-zone"
+  dns_name     = "run.app."
+  description  = "Private zone for run.app"
 }
 
 ######## Records
@@ -70,11 +68,11 @@ module "googleapis_cname_record" {
     google = google
   }
   
-  name         = var.pga_dns_config_googleapis_cname_record_name
-  managed_zone = var.pga_dns_config_googleapis_cname_record_managed_zone
-  type         = var.pga_dns_config_googleapis_cname_record_type
-  ttl          = var.pga_dns_config_googleapis_cname_record_ttl
-  rrdatas      = var.pga_dns_config_googleapis_cname_record_rrdatas
+  name         = "*.googleapis.com."
+  managed_zone = module.googleapis_zone.zone_name
+  type         = "CNAME"
+  ttl          = 300
+  rrdatas      = ["private.googleapis.com."]
 
   depends_on = [module.googleapis_zone]
 
@@ -87,11 +85,11 @@ module "gcr_cname_record" {
     google = google
   }
   
-  name         = var.pga_dns_config_gcr_cname_record_name
-  managed_zone = var.pga_dns_config_gcr_cname_record_managed_zone
-  type         = var.pga_dns_config_gcr_cname_record_type
-  ttl          = var.pga_dns_config_gcr_cname_record_ttl
-  rrdatas      = var.pga_dns_config_gcr_cname_record_rrdatas
+  name         = "*.gcr.io."
+  managed_zone = module.gcr_zone.zone_name
+  type         = "CNAME"
+  ttl          = 300
+  rrdatas      = ["gcr.io."]
 
   depends_on = [module.gcr_zone]
 }
@@ -103,11 +101,11 @@ module "pkg_cname_record" {
     google = google
   }
   
-  name         = var.pga_dns_config_pkg_cname_record_name
-  managed_zone = var.pga_dns_config_pkg_cname_record_managed_zone
-  type         = var.pga_dns_config_pkg_cname_record_type
-  ttl          = var.pga_dns_config_pkg_cname_record_ttl
-  rrdatas      = var.pga_dns_config_pkg_cname_record_rrdatas
+  name         = "*.pkg.dev."
+  managed_zone = module.pkg_zone.zone_name
+  type         = "CNAME"
+  ttl          = 300
+  rrdatas      = ["pkg.dev."]
 
   depends_on = [module.pkg_zone]
 
@@ -120,11 +118,11 @@ module "run_cname_record" {
     google = google
   }
   
-  name         = var.pga_dns_config_run_cname_record_name
-  managed_zone = var.pga_dns_config_run_cname_record_managed_zone
-  type         = var.pga_dns_config_run_cname_record_type
-  ttl          = var.pga_dns_config_run_cname_record_ttl
-  rrdatas      = var.pga_dns_config_run_cname_record_rrdatas
+  name         = "*.run.app."
+  managed_zone = module.run_zone.zone_name
+  type         = "CNAME"
+  ttl          = 300
+  rrdatas      = ["run.app."]
 
   depends_on = [module.run_zone]
 }
@@ -136,11 +134,11 @@ module "googleapis_a_records" {
     google = google
   }
   
-  name         = var.pga_dns_config_googleapis_a_records_name
-  managed_zone = var.pga_dns_config_googleapis_a_records_managed_zone
-  type         = var.pga_dns_config_googleapis_a_records_type
-  ttl          = var.pga_dns_config_googleapis_a_records_ttl
-  rrdatas      = var.pga_dns_config_googleapis_a_records_rrdatas
+  name         = "googleapis.com."
+  managed_zone = module.googleapis_zone.zone_name
+  type         = "A"
+  ttl          = 300
+  rrdatas      = ["199.36.153.8", "199.36.153.9", "199.36.153.10", "199.36.153.11"]
 
   depends_on = [module.googleapis_zone]
 }
@@ -151,12 +149,12 @@ module "gcr_a_records" {
   providers = {
     google = google
   }
-  
-  name         = var.pga_dns_config_gcr_a_records_name
-  managed_zone = var.pga_dns_config_gcr_a_records_managed_zone
-  type         = var.pga_dns_config_gcr_a_records_type
-  ttl          = var.pga_dns_config_gcr_a_records_ttl
-  rrdatas      = var.pga_dns_config_gcr_a_records_rrdatas
+
+  name         = "gcr.io."
+  managed_zone = module.gcr_zone.zone_name
+  type         = "A"
+  ttl          = 300
+  rrdatas      = ["199.36.153.8", "199.36.153.9", "199.36.153.10", "199.36.153.11"]
 
   depends_on = [module.gcr_zone]
 }
@@ -168,11 +166,11 @@ module "pkg_a_records" {
     google = google
   }
   
-  name         = var.pga_dns_config_pkg_a_records_name
-  managed_zone = var.pga_dns_config_pkg_a_records_managed_zone
-  type         = var.pga_dns_config_pkg_a_records_type
-  ttl          = var.pga_dns_config_pkg_a_records_ttl
-  rrdatas      = var.pga_dns_config_pkg_a_records_rrdatas
+  name         = "pkg.dev."
+  managed_zone = module.pkg_zone.zone_name
+  type         = "A"
+  ttl          = 300
+  rrdatas      = ["199.36.153.8", "199.36.153.9", "199.36.153.10", "199.36.153.11"]
 
   depends_on = [module.pkg_zone]
 }
@@ -184,11 +182,11 @@ module "run_a_records" {
     google = google
   }
   
-  name         = var.pga_dns_config_run_a_records_name
-  managed_zone = var.pga_dns_config_run_a_records_managed_zone
-  type         = var.pga_dns_config_run_a_records_type
-  ttl          = var.pga_dns_config_run_a_records_ttl
-  rrdatas      = var.pga_dns_config_run_a_records_rrdatas
+  name         = "run.app."
+  managed_zone = module.run_zone.zone_name
+  type         = "A"
+  ttl          = 300
+  rrdatas      = ["199.36.153.8", "199.36.153.9", "199.36.153.10", "199.36.153.11"]
 
   depends_on = [module.run_zone]
 }
